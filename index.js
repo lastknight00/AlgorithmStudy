@@ -5,7 +5,7 @@ var listSum = {
   func : function(list, num) {
     var sum = 0;
     list.forEach(function(value, num) {
-      sum += value;
+      sum += parseInt(value);
     });
     return sum;
   }
@@ -52,7 +52,7 @@ var execute = function(funcName) {
     }
     $('#playground').append(element);
   }
-  $('#playground').append($('<button>').html('Execute').on('click', function() {
+  $('#playground').append($('<button>').html('Execute').attr('func', funcName).on('click', e => {
     var param = [];
     for (var key in func.params) {
       switch (func.params[key]) {
@@ -69,7 +69,8 @@ var execute = function(funcName) {
           console.log(key + ' element\'s type is wrong.');
       }
     }
-    func.func(...param);
+    var result = algoMap[$(e.target).attr('func')].func(...param);
+    alert(result);
   }));
 };
 
@@ -88,8 +89,7 @@ $(document).ready(function() {
   for (var key in algoMap) {
     var tag = $('<div>').html(key).attr('draggable', true)
     .on('dragstart', e => {
-      console.log('jquery', e)
-      e.originalEvent.dataTransfer.setData('key', key)
+      e.originalEvent.dataTransfer.setData('key', $(e.target).html());
     });
 
     $('#func_list').append(tag);
