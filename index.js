@@ -1,25 +1,34 @@
 
 var listSum = {
-  params : {list : 'list', num : 'int'},
+  params : {list : 'list'},
+  returnType : 'int',
   func : function(list, num) {
-    console.log(list, num);
+    var sum = 0;
     list.forEach(function(value, num) {
-
-      console.log(value);
-
+      sum += value;
     });
+    return sum;
+  }
+};
+
+var listMax = {
+  params : {list : 'list'},
+  returnType : 'int',
+  func : function(list, num) {
+    var max = 0;
+    list.forEach(function(value, num) {
+      if(max < value) max = value;
+    });
+    return max;
   }
 };
 
 var algoMap = [];
 algoMap['listSum'] = listSum;
+algoMap['listMax'] = listMax;
 
-var makeInput = function(key) {
-  return $('<input class=' + key + '>');
-};
-
-var execute = function() {
-  var func = algoMap[$('#algo').val()];
+var execute = function(funcName) {
+  var func = algoMap[funcName];
   if(!func) {
     alert('not exists');
     return;
@@ -41,9 +50,9 @@ var execute = function() {
       default:
         console.log(key + ' element\'s type is wrong.');
     }
-    $('#canvas').append(element);
+    $('#playground').append(element);
   }
-  $('#canvas').append($('<button>').html('Execute').on('click', function() {
+  $('#playground').append($('<button>').html('Execute').on('click', function() {
     var param = [];
     for (var key in func.params) {
       switch (func.params[key]) {
@@ -63,3 +72,26 @@ var execute = function() {
     func.func(...param);
   }));
 };
+
+$(document).ready(function() {
+  $('#playground').on('dragenter', e => {
+    e.preventDefault();
+    return true;
+  })
+  .on('drop', e => {
+    execute(e.originalEvent.dataTransfer.getData('key'));
+  })
+  .on('dragover', e => {
+    e.preventDefault();
+    return true;
+  });
+  for (var key in algoMap) {
+    var tag = $('<div>').html(key).attr('draggable', true)
+    .on('dragstart', e => {
+      console.log('jquery', e)
+      e.originalEvent.dataTransfer.setData('key', key)
+    });
+
+    $('#func_list').append(tag);
+  }
+});
