@@ -1,0 +1,44 @@
+#playground {
+  background-color : #00ff00;
+  width : 50%;
+  height : 50px;
+  margin : auto;
+  padding : 20px;
+  display : table-cell;
+  min-width: 500px;
+}
+
+#func_list {
+  display : table-cell;
+  width : 100%;
+}
+h3 {
+  margin-top: 1px;
+}
+
+h4 {
+  display : inline;
+  padding-left: 15px;
+}
+.execute {
+  background-color : #ffffff;
+}
+
+.func_list {
+  background-color : #9292fd;
+  height : 10px;
+  padding : 10px 20px 10px 20px;
+  margin : 5px auto 5px auto;
+}
+
+.func {
+  background-color: #ffffff;
+  padding : 5px;
+  margin : 5px auto 5px auto;
+}
+
+.listInput {
+  width : 30px;
+  background-color: #cccccc;
+  margin : 5px;
+}
