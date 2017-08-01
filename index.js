@@ -30,7 +30,7 @@ algoMap['listMax'] = listMax;
 var addFunction = function(funcName) {
   var func = algoMap[funcName];
   if(!func) {
-    alert('not exists11');
+    alert('not exists');
     return;
   }
   var funcDiv = $('<div>').addClass('func').append($('<h3>').html(funcName));
@@ -41,42 +41,68 @@ var addFunction = function(funcName) {
     switch (key) {
       case 'list':
         element.append($('<button>').attr('name', key).html('Add Element').on('click', function(e) {
-          $(e.target).prev().append($('<input>').addClass($(e.target).attr('name')).addClass('listInput'));
+          $(e.target).prev().append($('<input>').addClass($(e.target).attr('name')).addClass('listInput').on('drop', e => {
+            if($(e.target).parent().children(':first-child').html() == e.originalEvent.dataTransfer.getData('returnType')) {
+              alert('true');
+            } else {
+              alert('false');
+            }
+            console.log();
+            e.stopPropagation();
+          })
+          .on('dragover', e => {
+            e.preventDefault();
+            return true;
+          }));
         }));
         break;
       case 'int':
-        element.append($('<input>').addClass(key));
+        element.append($('<input>').addClass(key).on('drop', e => {
+          if($(e.target).parent().children(':first-child').html() == e.originalEvent.dataTransfer.getData('returnType')) {
+            alert('true');
+          } else {
+            alert('false');
+          }
+          e.stopPropagation();
+        })
+        .on('dragover', e => {
+          e.preventDefault();
+          return true;
+        }));
         break;
       default:
         console.log(key + ' element\'s type is wrong.');
     }
     funcDiv.append(element);
   });
-  funcDiv.append($('<p>').addClass('output').html('Output').append($('<h4>').html(func.returnType)));
+  funcDiv.append($('<p>').addClass('output').html('Output').append($('<h4>').html(func.returnType).attr('draggable', true).on('dragstart', e => {
+    e.originalEvent.dataTransfer.setData('returnType', $(e.target).html());
+  })));
 
   $('#playground').append(funcDiv);
-
-  /*$('#playground').append($('<button>').html('Execute').attr('func', funcName).on('click', e => {
-    var param = [];
-    func.params.forEach(function(key) {
-      switch (key) {
-        case 'list':
-          var ret = $('.' + key).map(function() {
-            return $(this).val();
-          }).toArray();
-          param.push(ret);
-          break;
-        case 'int':
-          param.push($($('.' + key)[0]).val());
-          break;
-        default:
-          console.log(key + ' element\'s type is wrong.');
-      }
-    });
-    var result = algoMap[$(e.target).attr('func')].func(...param);
-    alert(result);
-  }));*/
 };
+
+var execute = function() {
+  var param = [];
+  func.params.forEach(function(key) {
+    switch (key) {
+      case 'list':
+        var ret = $('.' + key).map(function() {
+          return $(this).val();
+        }).toArray();
+        param.push(ret);
+        break;
+      case 'int':
+        param.push($($('.' + key)[0]).val());
+        break;
+      default:
+        console.log(key + ' element\'s type is wrong.');
+    }
+  });
+  var result = algoMap[$(e.target).attr('func')].func(...param);
+  alert(result);
+};
+
 var init = function() {
   $('#playground div').remove();
 };
